@@ -21,7 +21,7 @@ def run_eval():
                 task, 
                 max_turns=3, 
                 verbose=True, 
-                
+                use_docker_sandbox=False
             )
             success = answer is not None and len(answer) > 0
             results.append({"task": task, "success": success, "answer": answer, "metrics": metrics})
