@@ -20,7 +20,8 @@ def run_eval():
             answer, history, metrics = run_agent(
                 task, 
                 max_turns=3, 
-                verbose=True, 
+                verbose=True,
+                use_rust_sandbox=True,
                 
             )
             success = answer is not None and len(answer) > 0
