@@ -1,1 +1,14 @@
-GROQ_API_KEY=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
+{
+    "name": "Agent Harness",
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "hostRequirements": {
+        "cpus": 4,
+        "memory": "4gb"
+    },
+    "postCreateCommand": "pip install -r requirements.txt",
+    "customizations": {
+        "vscode": {
+            "extensions": ["ms-python.python"]
+        }
+    }
+}
