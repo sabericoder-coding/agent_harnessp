@@ -1,25 +1,3 @@
-
-from rust_sandbox_wrapper import run_python_in_rust_sandbox as run_rust
-
-def run_python_in_sandbox(code: str, timeout_sec: int = 10, use_docker: bool = True, use_rust: bool = False) -> dict:
-    """
-    Smart sandbox: tries Rust â†’ Docker â†’ subprocess fallback.
-    """
-    if use_rust:
-        result = run_rust(code, timeout_sec)
-        result["method"] = "rust"
-        return result
-
-    if use_docker and DOCKER_AVAILABLE:
-        result = run_python_in_docker_sandbox(code, timeout_sec)
-        result["method"] = "docker"
-        return result
-    else:
-        from sandbox_subprocess import run_python_in_subprocess
-        result = run_python_in_subprocess(code, timeout_sec)
-        result["method"] = "subprocess"
-        return result
-        
 import docker
 import tempfile
 import os
@@ -31,7 +9,7 @@ try:
     DOCKER_AVAILABLE = True
 except Exception as e:
     DOCKER_AVAILABLE = False
-    print(f"âš ï¸ Docker not available: {e}")
+    print(f"⚠️ Docker not available: {e}")
     print("   Falling back to subprocess sandbox. Install Docker for isolation.")
 
 def run_python_in_docker_sandbox(code: str, timeout_sec: int = 10) -> dict:
