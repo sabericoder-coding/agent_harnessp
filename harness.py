@@ -14,7 +14,7 @@ load_dotenv()
 # Initialize Groq client
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 if not GROQ_API_KEY:
-    print("❌ GROQ_API_KEY not found in .env file")
+    print("âŒ GROQ_API_KEY not found in .env file")
     print("Get one free at: https://console.groq.com")
     exit(1)
 
@@ -68,8 +68,8 @@ def run_agent(task: str, max_turns: int = 3, verbose: bool = True, use_docker_sa
 
     if verbose:
         sandbox_status = "Docker (with subprocess fallback)" if use_docker_sandbox else "subprocess only"
-        print(f"🔒 Sandbox mode: {sandbox_status}")
-        print(f"🤖 Model: {MODEL_NAME}")
+        print(f"ðŸ”’ Sandbox mode: {sandbox_status}")
+        print(f"ðŸ¤– Model: {MODEL_NAME}")
 
     while turn < max_turns:
         turn += 1
@@ -88,14 +88,14 @@ def run_agent(task: str, max_turns: int = 3, verbose: bool = True, use_docker_sa
             )
         except Exception as e:
             if verbose:
-                print(f"❌ API error: {e}")
+                print(f"âŒ API error: {e}")
             return None, messages, {"error": str(e)}
 
         usage = response.usage
         if usage and verbose:
             turn_tokens = usage.total_tokens
             total_tokens += turn_tokens
-            print(f"📊 Tokens: {turn_tokens} (prompt: {usage.prompt_tokens}, completion: {usage.completion_tokens})")
+            print(f"ðŸ“Š Tokens: {turn_tokens} (prompt: {usage.prompt_tokens}, completion: {usage.completion_tokens})")
 
         msg = response.choices[0].message
         messages.append(msg)
@@ -103,13 +103,13 @@ def run_agent(task: str, max_turns: int = 3, verbose: bool = True, use_docker_sa
         turn_latency = int((time.time() - turn_start_time) * 1000)
         total_latency_ms += turn_latency
         if verbose:
-            print(f"⏱️  Latency: {turn_latency}ms")
+            print(f"â±ï¸  Latency: {turn_latency}ms")
 
         # Check if agent is done (no tool call)
         if not msg.tool_calls:
             if verbose:
-                print(f"✅ Agent finished (no tool call)")
-                print(f"📝 Final answer: {msg.content}")
+                print(f"âœ… Agent finished (no tool call)")
+                print(f"ðŸ“ Final answer: {msg.content}")
             metrics = {
                 "turns": turn,
                 "total_tokens": total_tokens,
@@ -127,14 +127,14 @@ def run_agent(task: str, max_turns: int = 3, verbose: bool = True, use_docker_sa
                     code = args.get("code", "")
                     
                     if verbose:
-                        print(f"📝 Code received:\n```python\n{code}\n```")
+                        print(f"ðŸ“ Code received:\n```python\n{code}\n```")
                     
                     # Syntax check
                     try:
                         ast.parse(code)
                     except SyntaxError as syntax_err:
                         if verbose:
-                            print(f"⚠️  Syntax error: {syntax_err}")
+                            print(f"âš ï¸  Syntax error: {syntax_err}")
                         messages.append({
                             "role": "tool",
                             "tool_call_id": tool_call.id,
@@ -151,12 +151,12 @@ def run_agent(task: str, max_turns: int = 3, verbose: bool = True, use_docker_sa
                     
                     if verbose:
                         if error:
-                            print(f"❌ Execution error ({duration}ms, {sandbox_method})")
+                            print(f"âŒ Execution error ({duration}ms, {sandbox_method})")
                             print(f"   {error[:200]}")
                         else:
-                            print(f"✅ Execution success ({duration}ms, {sandbox_method})")
+                            print(f"âœ… Execution success ({duration}ms, {sandbox_method})")
                             if output:
-                                print(f"📤 Output: {output[:500]}")
+                                print(f"ðŸ“¤ Output: {output[:500]}")
                     
                     # Feed result back
                     if error:
@@ -172,7 +172,7 @@ def run_agent(task: str, max_turns: int = 3, verbose: bool = True, use_docker_sa
                     
                 except json.JSONDecodeError as e:
                     if verbose:
-                        print(f"❌ JSON parse error: {e}")
+                        print(f"âŒ JSON parse error: {e}")
                         print(f"   Raw arguments: {tool_call.function.arguments}")
                     messages.append({
                         "role": "tool",
@@ -181,7 +181,7 @@ def run_agent(task: str, max_turns: int = 3, verbose: bool = True, use_docker_sa
                     })
 
     if verbose:
-        print(f"⚠️  Max turns ({max_turns}) reached")
+        print(f"âš ï¸  Max turns ({max_turns}) reached")
     
     metrics = {
         "turns": turn,
@@ -197,5 +197,5 @@ if __name__ == "__main__":
     test_task = "Use execute_python to print 'Hello from sandbox'"
     print(f"Testing: {test_task}\n")
     answer, history, metrics = run_agent(test_task, max_turns=2, verbose=True, use_docker_sandbox=False)
-    print(f"\n✅ Final answer: {answer}")
-    print(f"📊 Metrics: {metrics}")
+    print(f"\nâœ… Final answer: {answer}")
+    print(f"ðŸ“Š Metrics: {metrics}")
