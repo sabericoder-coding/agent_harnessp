@@ -143,7 +143,7 @@ Each Turn → Tokens Used → Latency → Success/Fail
 
 ## 🚀 Try It Now
 
-```bash
+
 # One click — no setup
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/sabericoder-coding/agent_harnessp)
 
